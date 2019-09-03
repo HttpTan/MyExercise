@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RoundProgressBar">
+        <!--out arc width-->
+        <attr name="rpb_sweepStrokeWidth" format="dimension|reference" />
+        <!--out arc color-->
+        <attr name="rpb_sweepStrokeColor" format="color|reference" />
+        <!--center text size-->
+        <attr name="rpb_centerTextSize" format="dimension|reference" />
+        <!--center text color-->
+        <attr name="rpb_centerTextColor" format="color|reference" />
+        <!--center background color-->
+        <attr name="rpb_centerBackgroundColor" format="color|reference" />
+        <!--count time(millions)-->
+        <attr name="rpb_countDownTimeInMillis" format="integer" />
+        <!--whether draw outside wrapper-->
+        <attr name="rpb_drawOutsideWrapper" format="boolean" />
+        <!--outside wrapper color-->
+        <attr name="rpb_outsideWrapperColor" format="color|reference" />
+    </declare-styleable>
+</resources>
