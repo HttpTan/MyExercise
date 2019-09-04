@@ -13,6 +13,7 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,7 +44,6 @@ public class RoundProgressBar extends View {
     private int progress;
 
     //countDown millis default is 8000ms
-
     private int countDownTimeMillis;
 
     //center background paint
@@ -51,6 +51,10 @@ public class RoundProgressBar extends View {
 
     //center background
     private int centerBackground;
+
+
+    private int centerRadius;
+    private int outerRadius;
 
     //center textColor
     private int centerTextColor;
@@ -65,16 +69,10 @@ public class RoundProgressBar extends View {
     private Paint.FontMetrics fontMetrics;
 
     //value animator
-    private ValueAnimator animator;
-
-    //if true draw outsideWrapper false otherwise
-    private boolean shouldDrawOutsideWrapper;
+    private ValueAnimator mAnimator;
 
     //outsideWrapper color
     private int outsideWrapperColor;
-
-    //default space between view to bound
-    private int defaultSpace;
 
     private long currentTime;
 
@@ -98,14 +96,15 @@ public class RoundProgressBar extends View {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RoundProgressBar);
         strokeWidth = a.getDimensionPixelSize(R.styleable.RoundProgressBar_rpb_sweepStrokeWidth, (int) dp2px(2));
         strokeColor = a.getColor(R.styleable.RoundProgressBar_rpb_sweepStrokeColor, Color.BLACK);
+        outerRadius = a.getDimensionPixelSize(R.styleable.RoundProgressBar_rpb_outerRadius, (int) dp2px(56));
+        outsideWrapperColor = a.getColor(R.styleable.RoundProgressBar_rpb_outsideWrapperColor, Color.parseColor("#E8E8E8"));
+        centerRadius = a.getDimensionPixelSize(R.styleable.RoundProgressBar_rpb_centerRadius, (int) dp2px(48));
         centerTextSize = a.getDimension(R.styleable.RoundProgressBar_rpb_centerTextSize, sp2px(12));
         centerTextColor = a.getColor(R.styleable.RoundProgressBar_rpb_centerTextColor, Color.WHITE);
         centerBackground = a.getColor(R.styleable.RoundProgressBar_rpb_centerBackgroundColor, Color.parseColor("#808080"));
-        countDownTimeMillis = a.getInteger(R.styleable.RoundProgressBar_rpb_countDownTimeInMillis, 3 * 1000);
-        shouldDrawOutsideWrapper = a.getBoolean(R.styleable.RoundProgressBar_rpb_drawOutsideWrapper, false);
-        outsideWrapperColor = a.getColor(R.styleable.RoundProgressBar_rpb_outsideWrapperColor, Color.parseColor("#E8E8E8"));
+        countDownTimeMillis = a.getInteger(R.styleable.RoundProgressBar_rpb_countDownTimeInMillis, 8 * 1000);
         a.recycle();
-        defaultSpace = strokeWidth * 2;
+
         arcPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         arcPaint.setStyle(Paint.Style.STROKE);
 
@@ -115,8 +114,6 @@ public class RoundProgressBar extends View {
 
         centerBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         centerBgPaint.setStyle(Paint.Style.FILL);
-
-        arcRect = new RectF();
     }
 
 
@@ -131,31 +128,12 @@ public class RoundProgressBar extends View {
         mWidth = w;
         mHeight = h;
 
-        arcRect.left = defaultSpace >> 1;
-        arcRect.top = defaultSpace >> 1;
-        arcRect.right = w - (defaultSpace >> 1);
-        arcRect.bottom = h - (defaultSpace >> 1);
-
-        //if (mRegion != null) {
+        arcRect = new RectF(w / 2 - outerRadius, h / 2 - outerRadius, w / 2 + outerRadius, h / 2 + outerRadius);
         mRegion = new Region();
-        //}
-
         Path path = new Path();
-        path.addCircle(w / 2, h / 2, (arcRect.width() - (defaultSpace >> 2)) / 2, Path.Direction.CW);
+        path.addCircle(w / 2, h / 2, centerRadius, Path.Direction.CW);
 
         mRegion.setPath(path, new Region(new Rect(0, 0, w, h)));
-
-
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        drawCenterBackground(canvas);
-        if (shouldDrawOutsideWrapper) {
-            drawOutsideWrapper(canvas);
-        }
-        drawArc(canvas);
-        drawCenterText(canvas);
     }
 
     @Override
@@ -165,7 +143,6 @@ public class RoundProgressBar extends View {
         if (event.getAction() != MotionEvent.ACTION_DOWN && event.getAction() != MotionEvent.ACTION_UP) {
             return false;
         }
-        setTag(null);
 
         int x = (int) event.getX();
         int y = (int) event.getY();
@@ -175,10 +152,20 @@ public class RoundProgressBar extends View {
         }
 
         if (mRegion.contains(x, y)) {
+            stop();
+            setProgress(0);
             mClickListener.onClick();
         }
 
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        drawCenterBackground(canvas);
+        drawOutsideWrapper(canvas);
+        drawArc(canvas);
+        drawCenterText(canvas);
     }
 
     /**
@@ -188,15 +175,16 @@ public class RoundProgressBar extends View {
      */
     private void drawCenterBackground(Canvas canvas) {
         centerBgPaint.setColor(centerBackground);
-        canvas.drawCircle(arcRect.centerX(), arcRect.centerY(), (arcRect.width() - (defaultSpace >> 2)) / 2, centerBgPaint);
+        canvas.drawCircle(arcRect.centerX(), arcRect.centerY(), centerRadius, centerBgPaint);
     }
 
     /**
      * draw outside arc wrapper if needed
-     *
      * @param canvas
      */
     private void drawOutsideWrapper(Canvas canvas) {
+        arcPaint.setStrokeCap(Paint.Cap.ROUND);
+        arcPaint.setStrokeWidth(strokeWidth);
         arcPaint.setColor(outsideWrapperColor);
         canvas.drawArc(arcRect, 0, 360, false, arcPaint);
     }
@@ -206,7 +194,6 @@ public class RoundProgressBar extends View {
      * @param canvas
      */
     private void drawArc(Canvas canvas) {
-        arcPaint.setStrokeWidth(strokeWidth);
         arcPaint.setColor(strokeColor);
         canvas.drawArc(arcRect, -90, progress, false, arcPaint);
     }
@@ -220,8 +207,8 @@ public class RoundProgressBar extends View {
         fontMetrics = textPaint.getFontMetrics();
         float distance = (fontMetrics.bottom - fontMetrics.top) /2;
 
-        canvas.drawText("立即", arcRect.centerX(), arcRect.centerY() - 6 , textPaint);
-        canvas.drawText("接听", arcRect.centerX(), arcRect.centerY() + 6 + distance , textPaint);
+        canvas.drawText("立即", arcRect.centerX(), arcRect.centerY() - 12 , textPaint);
+        canvas.drawText("接听", arcRect.centerX(), arcRect.centerY() + 16 + distance , textPaint);
     }
 
     public void start() {
@@ -229,15 +216,16 @@ public class RoundProgressBar extends View {
     }
 
     public void stop() {
-        if (animator != null) {
-            animator.cancel();
+        if (mAnimator != null) {
+            mAnimator.removeAllListeners();
+            mAnimator.cancel();
         }
     }
 
     public void pause() {
-        if (animator != null) {
-            currentTime = animator.getCurrentPlayTime();
-            animator.cancel();
+        if (mAnimator != null) {
+            currentTime = mAnimator.getCurrentPlayTime();
+            mAnimator.cancel();
         }
     }
 
@@ -245,9 +233,9 @@ public class RoundProgressBar extends View {
      * resume
      */
     public void resume() {
-        if (animator != null) {
-            animator.setCurrentPlayTime(currentTime);
-            animator.start();
+        if (mAnimator != null) {
+            mAnimator.setCurrentPlayTime(currentTime);
+            mAnimator.start();
         }
     }
 
@@ -268,16 +256,16 @@ public class RoundProgressBar extends View {
      * @param duration  duration
      */
     private void initAnimator(int duration) {
-        if (animator != null && animator.isRunning()) {
-            animator.cancel();
+        if (mAnimator != null && mAnimator.isRunning()) {
+            mAnimator.cancel();
         }
         int start = 360;
         int end = 0;
-        animator = ValueAnimator.ofInt(start, end).setDuration(duration);
-        animator.setRepeatCount(0);
-        animator.setInterpolator(new LinearInterpolator());
-        animator.start();
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        mAnimator = ValueAnimator.ofInt(start, end).setDuration(duration);
+        mAnimator.setRepeatCount(0);
+        mAnimator.setInterpolator(new LinearInterpolator());
+        mAnimator.start();
+        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 progress = (int) animation.getAnimatedValue();
@@ -287,7 +275,7 @@ public class RoundProgressBar extends View {
                 invalidate();
             }
         });
-        animator.addListener(new Animator.AnimatorListener() {
+        mAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -310,7 +298,6 @@ public class RoundProgressBar extends View {
 
             }
         });
-
 
     }
 
@@ -407,10 +394,6 @@ public class RoundProgressBar extends View {
         }
         this.progress = (int) (progressPercent * 3.6);
         invalidate();
-    }
-
-    public void setShouldDrawOutsideWrapper(boolean shouldDrawOutsideWrapper) {
-        this.shouldDrawOutsideWrapper = shouldDrawOutsideWrapper;
     }
 
     public void setOutsideWrapperColor(int outsideWrapperColor) {
