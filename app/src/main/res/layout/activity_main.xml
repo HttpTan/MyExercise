@@ -44,4 +44,36 @@
         app:rpb_sweepStrokeColor="#fff"
         app:rpb_sweepStrokeWidth="4dp" />
 
+    <RelativeLayout
+        android:id="@+id/contact_go"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/round_progressbar"
+        android:background="@android:color/black"
+        android:layout_marginTop="40dp">
+
+        <ImageView
+            android:id="@+id/action_go"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:background="@drawable/circle_progressbar_bg"
+            android:scaleType="center"
+            android:src="@mipmap/ic_accept_ecall_mini"/>
+
+        <ProgressBar
+            android:id="@+id/img_loading"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:progressDrawable="@drawable/circle_progress_bar"
+            tools:max="100"/>
+    </RelativeLayout>
+
+
+
+
 </android.support.constraint.ConstraintLayout>

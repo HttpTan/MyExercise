@@ -20,4 +20,24 @@
         <!--outside wrapper color-->
         <attr name="rpb_outsideWrapperColor" format="color|reference" />
     </declare-styleable>
+
+    <declare-styleable name="CountDownProgressbar">
+        <!-- center img-->
+        <attr name="cdpb_center_img" format="reference" />
+
+        <!--internal space-->
+        <attr name="cdpb_internal_space" format="dimension|reference" />
+
+        <!--progressbar width-->
+        <attr name="cdpb_sweepStrokeWidth" format="dimension|reference" />
+
+        <!--progressbar color-->
+        <attr name="cdpb_sweepStrokeColor" format="color|reference" />
+
+        <!--outside wrapper color-->
+        <attr name="cdpb_outsideWrapperColor" format="color|reference" />
+
+        <!--count time(millions)-->
+        <attr name="cdpb_countDownTimeInMillis" format="integer" />
+    </declare-styleable>
 </resources>
