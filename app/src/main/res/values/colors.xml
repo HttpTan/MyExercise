@@ -20,4 +20,7 @@
         <item>@color/aqua</item>
         <item>@color/yellow</item>
     </array>
+
+    <color name="flow_item_backgroud_color">#EBF0F5</color>
+    <color name="flow_item_text_color">#1A12131A</color>
 </resources>

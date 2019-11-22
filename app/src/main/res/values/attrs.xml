@@ -40,4 +40,10 @@
         <!--count time(millions)-->
         <attr name="cdpb_countDownTimeInMillis" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="FlowLayout">
+        <attr name="horitental_space" format="dimension|reference" />
+        <attr name="vertical_space" format="dimension|reference" />
+    </declare-styleable>
+
 </resources>

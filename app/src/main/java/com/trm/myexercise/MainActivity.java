@@ -1,81 +1,78 @@
 package com.trm.myexercise;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.trm.myexercise.view.RoundProgressBar;
+import com.trm.myexercise.view.FlowLayout;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.Random;
 
-    private RoundProgressBar mProgressbar;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ProgressBar loading_to_call;
-    private ValueAnimator objectAnimator;
-    private static final long TIME_OUT_LENGTH = 8000;
-    private static final String PROGRESS_PROPERTY = "progress";
+    private static final String[] PROGRAME_LANGUAGE =
+            {"Java", "Python", "PHP", "Android", "ios",
+                    "Android and ios", "Java and PHP", "PHP and Python", "ios and Java"};
+
+    private Random random;
+
+    private FlowLayout mShowFlowLayout;
+    private FlowLayout mSelectFlowLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.flow_layout);
 
-        mProgressbar = findViewById(R.id.round_progressbar);
+        init();
+        fillFlowLayout();
 
-        mProgressbar.setClickListener(new RoundProgressBar.ClickListener() {
-            @Override
-            public void onClick() {
-                Toast.makeText(MainActivity.this, "点击了", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        mProgressbar.setProgressChangeListener(new RoundProgressBar.ProgressChangeListener() {
-            @Override
-            public void onFinish() {
-                Toast.makeText(MainActivity.this, "完成了", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onProgressChanged(int progress) {
-
-            }
-        });
-
-
-        loading_to_call = findViewById(R.id.img_loading);
-        initCallProgress();
-
-        objectAnimator.start();
     }
 
+    private void init() {
+        random = new Random();
+        mShowFlowLayout = findViewById(R.id.flow_layout_show);
+        mSelectFlowLayout = findViewById(R.id.flow_layout_select);
+    }
 
+    private void fillFlowLayout() {
+        int count = 0;
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                getResources().getDimensionPixelSize(R.dimen.flow_item_height));
+        layoutParams.gravity = Gravity.CENTER;
+        while (count++ < 20) {
+            mSelectFlowLayout.addView(createView(), layoutParams);
+        }
+    }
 
-    private void initCallProgress() {
-        loading_to_call.setProgress(0);
+    private View createView() {
+        TextView textView = new TextView(this);
+        textView.setBackgroundResource(R.drawable.flow_item_background);
+        textView.setText(PROGRAME_LANGUAGE[random.nextInt(PROGRAME_LANGUAGE.length)]);
+        textView.setPadding(getResources().getDimensionPixelSize(R.dimen.flow_item_corner), 0, getResources().getDimensionPixelSize(R.dimen.flow_item_corner), 0);
+        textView.setGravity(Gravity.CENTER);
 
-        objectAnimator = ObjectAnimator
-                .ofInt(loading_to_call, PROGRESS_PROPERTY, loading_to_call.getMax())
-                .setDuration(TIME_OUT_LENGTH);
-        objectAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                Toast.makeText(MainActivity.this, "完成了", Toast.LENGTH_SHORT).show();
-            }
-        });
-        objectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                //tv_action_go.setText(String.format("%s秒", String.valueOf(5 - valueAnimator.getCurrentPlayTime() / 1000)));
-            }
-        });
-        objectAnimator.setInterpolator(new LinearInterpolator());
+        textView.setOnClickListener(this);
+
+        return textView;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (!(v instanceof TextView)) return;
+
+        if (v.getParent() == mShowFlowLayout) {
+            mShowFlowLayout.removeView(v);
+            mSelectFlowLayout.addView(v);
+        } else if (v.getParent() == mSelectFlowLayout) {
+            mSelectFlowLayout.removeView(v);
+            mShowFlowLayout.addView(v);
+        }
+
     }
 }

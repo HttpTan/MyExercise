@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <size android:height="@dimen/flow_item_height" />
+    <corners android:radius="@dimen/flow_item_corner" />
+    <solid android:color="@color/flow_item_backgroud_color" />
+
+</shape>

@@ -4,3 +4,4 @@ Customer view for chrome icon and control view, every part of view can do click 
 
 ![image](https://github.com/HttpTan/MyExercise/blob/master/preview.gif)
 ![image](https://github.com/HttpTan/MyExercise/blob/master/splash_view.gif)
+![image](https://github.com/HttpTan/MyExercise/blob/master/app/src/main/assets/flow_layout.png)

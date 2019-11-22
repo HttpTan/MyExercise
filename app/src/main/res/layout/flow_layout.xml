@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="#12131A"
+        android:textSize="22sp"
+        android:text="历史搜索"/>
+
+    <com.trm.myexercise.view.FlowLayout
+        android:id="@+id/flow_layout_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+    </com.trm.myexercise.view.FlowLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="#12131A"
+        android:textSize="22sp"
+        android:text="搜索发现"/>
+
+    <com.trm.myexercise.view.FlowLayout
+        android:id="@+id/flow_layout_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+    </com.trm.myexercise.view.FlowLayout>
+
+</LinearLayout>
