@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:viewBindingIgnore="true"
+    tools:context=".fragment.MainActivity">
+
+    <com.trm.myexercise.view.ChromeView
+        android:id="@+id/id_chrome"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"/>
+
+    <com.trm.myexercise.view.ControlView
+        android:id="@+id/control_view"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/id_chrome"
+        android:layout_marginTop="30dp"
+        />
+    
+    <com.trm.myexercise.view.RoundProgressBar
+        android:id="@+id/round_progressbar"
+        android:layout_width="134dp"
+        android:layout_height="134dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/control_view"
+        android:layout_marginTop="30dp"
+        android:background="#000"
+        app:rpb_centerRadius="48dp"
+        app:rpb_outerRadius="56dp"
+        app:rpb_centerBackgroundColor="#19B98A"
+        app:rpb_centerTextColor="#fff"
+        app:rpb_centerTextSize="22sp"
+        app:rpb_countDownTimeInMillis="8000"
+        app:rpb_outsideWrapperColor="#aabbcc"
+        app:rpb_sweepStrokeColor="#fff"
+        app:rpb_sweepStrokeWidth="4dp" />
+
+    <RelativeLayout
+        android:id="@+id/contact_go"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/round_progressbar"
+        android:background="@android:color/black"
+        android:layout_marginTop="40dp">
+
+        <ImageView
+            android:id="@+id/action_go"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:background="@drawable/circle_progressbar_bg"
+            android:scaleType="center"
+            android:src="@mipmap/ic_accept_ecall_mini"/>
+
+        <ProgressBar
+            android:id="@+id/img_loading"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:progressDrawable="@drawable/circle_progress_bar"
+            tools:max="100"/>
+    </RelativeLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

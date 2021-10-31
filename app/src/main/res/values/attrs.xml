@@ -46,4 +46,24 @@
         <attr name="vertical_space" format="dimension|reference" />
     </declare-styleable>
 
+    <declare-styleable name="ScaleView">
+        <!-- 高低刻度的高度尺寸、尺寸线的宽度、尺寸线的颜色 -->
+        <attr name="lowSize" format="dimension" />
+        <attr name="highSize" format="dimension" />
+        <attr name="scaleWidth" format="dimension" />
+        <attr name="scaleColor" format="color" />
+
+        <!-- 刻度线间距 -->
+        <attr name="scaleSpace" format="dimension" />
+
+        <!-- 中间指针的高度尺寸、宽度、颜色 -->
+        <attr name="pointerSize" format="dimension" />
+        <attr name="pointerWidth" format="dimension" />
+        <attr name="pointerColor" format="color" />
+
+        <!--  刻度的起始数值 -->
+        <attr name="startIndex" format="float" />
+        <attr name="endIndex" format="float" />
+    </declare-styleable>
+
 </resources>
